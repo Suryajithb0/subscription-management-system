@@ -35,6 +35,12 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       roles: ['admin', 'staff', 'customer']
     },
     {
+      name: 'Customers',
+      path: '/customers',
+      icon: Users,
+      roles: ['admin', 'staff']
+    },
+    {
       name: 'Products & Catalog',
       path: '/products',
       icon: Package,
@@ -49,7 +55,7 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
     {
       name: 'Staff Management',
       path: '/admin/staff',
-      icon: Users,
+      icon: Shield,
       roles: ['admin']
     },
     {

@@ -11,6 +11,7 @@ export const AdminLayout = () => {
   // Dynamic header title lookup based on path
   const getHeaderTitle = (pathname) => {
     if (pathname === '/admin' || pathname === '/admin/') return 'Dashboard Overview';
+    if (pathname.startsWith('/customers') || pathname.startsWith('/admin/customers')) return 'Customer Management';
     if (pathname.startsWith('/products') || pathname.startsWith('/admin/products')) return 'Product & Variant Management';
     if (pathname.startsWith('/plans') || pathname.startsWith('/admin/plans')) return 'Subscription Plan Management';
     if (pathname.startsWith('/admin/staff')) return 'Staff & Role Management';

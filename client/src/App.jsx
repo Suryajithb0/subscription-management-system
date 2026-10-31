@@ -14,6 +14,8 @@ import { BillingPage } from './pages/admin/BillingPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
 import { PlansPage } from './pages/admin/PlansPage';
+import { CustomersPage } from './pages/admin/CustomersPage';
+import { CustomerProfilePage } from './pages/admin/CustomerProfilePage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -78,6 +80,8 @@ export default function App() {
             }
           >
             {/* Direct Core Module Routes */}
+            <Route path="customers" element={<CustomersPage />} />
+            <Route path="customers/:id" element={<CustomerProfilePage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="plans" element={<PlansPage />} />
           </Route>
@@ -94,6 +98,8 @@ export default function App() {
             <Route index element={<AdminDashboardPage />} />
 
             {/* Core Management Aliases */}
+            <Route path="customers" element={<CustomersPage />} />
+            <Route path="customers/:id" element={<CustomerProfilePage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="plans" element={<PlansPage />} />
 
