@@ -1,6 +1,7 @@
 const Subscription = require('../models/Subscription');
 const Customer = require('../models/Customer');
 const Plan = require('../models/Plan');
+const { pool } = require('../config/db');
 
 // Valid status transitions map
 const VALID_TRANSITIONS = {
@@ -442,11 +443,47 @@ const getSubscriptionInvoices = async (req, res, next) => {
       });
     }
 
-    // Return empty list safely for Stage 08 (Invoices module is upcoming)
+    // Role ownership check for customer
+    if (req.user.role === 'customer') {
+      if (subscription.customer_user_id !== req.user.id) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied: You are not authorized to view this subscription.',
+        });
+      }
+    }
+
+    const [invoices] = await pool.execute(
+      `SELECT 
+        id, invoice_number, customer_id, subscription_id,
+        DATE_FORMAT(billing_period_start, '%Y-%m-%d') as billing_period_start,
+        DATE_FORMAT(billing_period_end, '%Y-%m-%d') as billing_period_end,
+        billing_period,
+        DATE_FORMAT(issue_date, '%Y-%m-%d') as issue_date,
+        DATE_FORMAT(due_date, '%Y-%m-%d') as due_date,
+        subtotal, tax_amount, discount_amount, total,
+        amount_paid, balance_due, currency, status, notes,
+        created_at
+       FROM invoices
+       WHERE subscription_id = ?
+       ORDER BY id DESC`,
+      [subscriptionId]
+    );
+
+    const formatted = invoices.map(i => ({
+      ...i,
+      subtotal: parseFloat(i.subtotal) || 0,
+      tax_amount: parseFloat(i.tax_amount) || 0,
+      discount_amount: parseFloat(i.discount_amount) || 0,
+      total: parseFloat(i.total) || 0,
+      amount_paid: parseFloat(i.amount_paid) || 0,
+      balance_due: parseFloat(i.balance_due) || 0
+    }));
+
     return res.status(200).json({
       success: true,
-      data: [],
-      message: 'No invoices currently generated for this subscription cycle.',
+      data: formatted,
+      message: `Retrieved ${formatted.length} invoice(s) for subscription.`
     });
   } catch (error) {
     next(error);

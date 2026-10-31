@@ -11,6 +11,8 @@ import { StaffManagementPage } from './pages/admin/StaffManagementPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { SubscriptionsPage } from './pages/admin/SubscriptionsPage';
 import { BillingPage } from './pages/admin/BillingPage';
+import { InvoicesPage } from './pages/admin/InvoicesPage';
+import { InvoiceDetailsPage } from './pages/admin/InvoiceDetailsPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
 import { PlansPage } from './pages/admin/PlansPage';
@@ -87,6 +89,10 @@ export default function App() {
             <Route path="customers/:id" element={<CustomerProfilePage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="plans" element={<PlansPage />} />
+            <Route path="invoices" element={<InvoicesPage />} />
+            <Route path="invoices/:id" element={<InvoiceDetailsPage />} />
+            <Route path="billing" element={<InvoicesPage />} />
+            <Route path="billing/:id" element={<InvoiceDetailsPage />} />
             <Route
               path="staff"
               element={
@@ -117,7 +123,10 @@ export default function App() {
             <Route path="plans" element={<PlansPage />} />
 
             {/* Billing & Invoices */}
-            <Route path="billing" element={<BillingPage />} />
+            <Route path="invoices" element={<InvoicesPage />} />
+            <Route path="invoices/:id" element={<InvoiceDetailsPage />} />
+            <Route path="billing" element={<InvoicesPage />} />
+            <Route path="billing/:id" element={<InvoiceDetailsPage />} />
 
             {/* Staff Management (Admin only) */}
             <Route

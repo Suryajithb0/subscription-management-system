@@ -14,7 +14,8 @@ import {
   LifeBuoy,
   Bell,
   Sparkles,
-  Package
+  Package,
+  Receipt
 } from 'lucide-react';
 
 export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }) => {
@@ -66,10 +67,10 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       roles: ['admin']
     },
     {
-      name: 'Transactions & Billing',
-      path: '/admin/billing',
-      icon: CreditCard,
-      roles: ['admin', 'staff']
+      name: 'Invoices & Billing',
+      path: '/invoices',
+      icon: Receipt,
+      roles: ['admin', 'staff', 'customer']
     },
     {
       name: 'System Settings',

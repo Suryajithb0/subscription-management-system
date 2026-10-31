@@ -28,6 +28,7 @@ export const SubscriptionDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [subscription, setSubscription] = useState(null);
+  const [subscriptionInvoices, setSubscriptionInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -45,14 +46,36 @@ export const SubscriptionDetailsPage = () => {
   const fetchSubscription = async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/subscriptions/${id}`);
+      const [res, invRes] = await Promise.all([
+        api.get(`/subscriptions/${id}`),
+        api.get(`/subscriptions/${id}/invoices`).catch(() => ({ data: { data: [] } }))
+      ]);
+
       if (res.data && res.data.success) {
         setSubscription(res.data.data);
+      }
+      if (invRes.data?.data) {
+        setSubscriptionInvoices(invRes.data.data);
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Subscription not found');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGenerateInvoice = async () => {
+    setActionLoading(true);
+    try {
+      const res = await api.post(`/invoices/from-subscription/${id}`);
+      if (res.data && res.data.success) {
+        showNotification('success', `Invoice #${res.data.data.invoice_number} generated successfully!`);
+        fetchSubscription();
+      }
+    } catch (err) {
+      showNotification('error', err.response?.data?.message || 'Failed to generate invoice');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -315,14 +338,82 @@ export const SubscriptionDetailsPage = () => {
       </div>
 
       {/* Related Invoices Section */}
-      <div className="rounded-2xl bg-[#0f1129]/80 border border-slate-800/80 p-5 shadow-xl">
-        <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-          <FileText className="h-4 w-4 text-violet-400" /> Related Invoices & Statements
-        </h3>
-        <EmptyState
-          title="No cycle invoices generated yet"
-          description="Invoices for recurring renewals will automatically be recorded here upon billing execution."
-        />
+      <div className="rounded-2xl bg-[#0f1129]/80 border border-slate-800/80 p-6 shadow-xl space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+            <FileText className="h-4 w-4 text-violet-400" /> Related Invoices & Statements
+          </h3>
+
+          {subscription.status === 'active' && (
+            <button
+              onClick={handleGenerateInvoice}
+              disabled={actionLoading}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-600/30 text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              <span>Generate Cycle Invoice</span>
+            </button>
+          )}
+        </div>
+
+        {subscriptionInvoices.length === 0 ? (
+          <EmptyState
+            title="No cycle invoices generated yet"
+            description="Invoices for recurring renewals will automatically be recorded here upon billing execution."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/40">
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px]">Invoice #</th>
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px]">Issue Date</th>
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px]">Due Date</th>
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px] text-right">Total</th>
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px] text-center">Status</th>
+                  <th className="py-2.5 px-3 font-semibold uppercase tracking-wider text-[11px] text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                {subscriptionInvoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-slate-800/20 transition-colors">
+                    <td className="py-3 px-3 font-mono font-semibold text-indigo-400">
+                      {inv.invoice_number}
+                    </td>
+                    <td className="py-3 px-3 text-slate-400">
+                      {inv.issue_date}
+                    </td>
+                    <td className="py-3 px-3 text-slate-400">
+                      {inv.due_date}
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono font-bold text-white">
+                      ${inv.total.toFixed(2)}
+                    </td>
+                    <td className="py-3 px-3 text-center">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize ${
+                        inv.status === 'paid'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : inv.status === 'pending'
+                          ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                          : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                      }`}>
+                        {inv.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <button
+                        onClick={() => navigate(`/invoices/${inv.id}`)}
+                        className="text-xs text-indigo-400 hover:text-indigo-300 font-medium underline cursor-pointer"
+                      >
+                        View Details →
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Cancel Confirmation Modal */}
