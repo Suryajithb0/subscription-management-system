@@ -286,6 +286,17 @@ SOURCE server/database/schema.sql;
 
 ---
 
+### 🚀 Unified Root Quickstart (Convenience Script)
+You can also run both backend and frontend concurrently from the root project directory:
+```bash
+# In the root repository directory:
+npm run dev
+```
+- Starts Backend on `http://localhost:5000`
+- Starts Frontend on `http://localhost:5173` with automatic API proxying
+
+---
+
 ## 🔐 Environment Configuration
 
 > ⚠️ **Security Notice:** Never commit actual `.env` files with production credentials, passwords, or secrets to Git.

@@ -1,0 +1,17 @@
+{
+  "name": "subflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SubFlow - Subscription Management System (Monorepo root)",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"magenta,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build:client": "npm --prefix client run build",
+    "start:server": "npm --prefix server start",
+    "install:all": "npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
