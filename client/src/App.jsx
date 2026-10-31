@@ -16,6 +16,7 @@ import { ProductsPage } from './pages/admin/ProductsPage';
 import { PlansPage } from './pages/admin/PlansPage';
 import { CustomersPage } from './pages/admin/CustomersPage';
 import { CustomerProfilePage } from './pages/admin/CustomerProfilePage';
+import { SubscriptionDetailsPage } from './pages/admin/SubscriptionDetailsPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -74,22 +75,32 @@ export default function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
                 <AdminLayout />
               </ProtectedRoute>
             }
           >
             {/* Direct Core Module Routes */}
+            <Route path="subscriptions" element={<SubscriptionsPage />} />
+            <Route path="subscriptions/:id" element={<SubscriptionDetailsPage />} />
             <Route path="customers" element={<CustomersPage />} />
             <Route path="customers/:id" element={<CustomerProfilePage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="plans" element={<PlansPage />} />
+            <Route
+              path="staff"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <StaffManagementPage />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           <Route
             path="/admin"
             element={
-              <ProtectedRoute allowedRoles={['admin', 'staff']}>
+              <ProtectedRoute allowedRoles={['admin', 'staff', 'customer']}>
                 <AdminLayout />
               </ProtectedRoute>
             }
@@ -98,13 +109,12 @@ export default function App() {
             <Route index element={<AdminDashboardPage />} />
 
             {/* Core Management Aliases */}
+            <Route path="subscriptions" element={<SubscriptionsPage />} />
+            <Route path="subscriptions/:id" element={<SubscriptionDetailsPage />} />
             <Route path="customers" element={<CustomersPage />} />
             <Route path="customers/:id" element={<CustomerProfilePage />} />
             <Route path="products" element={<ProductsPage />} />
             <Route path="plans" element={<PlansPage />} />
-
-            {/* Subscriptions Module */}
-            <Route path="subscriptions" element={<SubscriptionsPage />} />
 
             {/* Billing & Invoices */}
             <Route path="billing" element={<BillingPage />} />

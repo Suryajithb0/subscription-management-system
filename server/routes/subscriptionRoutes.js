@@ -5,17 +5,24 @@ const {
   getSubscriptionById,
   createSubscription,
   updateSubscription,
-  deleteSubscription
+  patchSubscriptionStatus,
+  getSubscriptionInvoices,
 } = require('../controllers/subscriptionController');
-const { verifyToken } = require('../middleware/authMiddleware');
 
-// All subscription routes require authentication
-router.use(verifyToken);
+const { authenticateToken } = require('../middleware/auth.middleware');
+const { authorizeRoles } = require('../middleware/role.middleware');
 
+// All subscription endpoints require JWT authentication
+router.use(authenticateToken);
+
+// Read endpoints: Admin, Staff, and Customer (ownership checked in controller)
 router.get('/', getSubscriptions);
 router.get('/:id', getSubscriptionById);
-router.post('/', createSubscription);
-router.put('/:id', updateSubscription);
-router.delete('/:id', deleteSubscription);
+router.get('/:id/invoices', getSubscriptionInvoices);
+
+// Modification & Lifecycle Management: Admin and Staff
+router.post('/', authorizeRoles('admin', 'staff'), createSubscription);
+router.put('/:id', authorizeRoles('admin', 'staff'), updateSubscription);
+router.patch('/:id/status', authorizeRoles('admin', 'staff'), patchSubscriptionStatus);
 
 module.exports = router;

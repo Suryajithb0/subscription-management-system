@@ -268,6 +268,22 @@ const createStaff = async (req, res, next) => {
 };
 
 /**
+ * List all Staff Accounts (Admin only)
+ * GET /api/auth/staff
+ */
+const getStaffList = async (req, res, next) => {
+  try {
+    const staffList = await User.findStaffMembers();
+    return res.status(200).json({
+      success: true,
+      data: staffList
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Password Reset - Request Token
  * POST /api/auth/forgot-password
  */
@@ -419,6 +435,7 @@ module.exports = {
   login,
   logout,
   createStaff,
+  getStaffList,
   forgotPassword,
   resetPassword,
   getMe,

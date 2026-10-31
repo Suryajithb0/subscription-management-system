@@ -59,6 +59,12 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
+  // Staff listing handler (Admin only)
+  const getStaff = async () => {
+    const response = await api.get('/auth/staff');
+    return response.data;
+  };
+
   // Forgot password request
   const forgotPassword = async (email) => {
     const response = await api.post('/auth/forgot-password', { email });
@@ -97,6 +103,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     createStaff,
+    getStaff,
     forgotPassword,
     resetPassword,
     logout,

@@ -5,6 +5,7 @@ const {
   login,
   logout,
   createStaff,
+  getStaffList,
   forgotPassword,
   resetPassword,
   getMe,
@@ -21,6 +22,7 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
 
 // Protected Staff Management (Admin Only)
+router.get('/staff', authenticateToken, authorizeRoles('admin'), getStaffList);
 router.post('/staff/create', authenticateToken, authorizeRoles('admin'), createStaff);
 
 // Protected User Profile Endpoint

@@ -129,6 +129,16 @@ class User {
     );
     return result.affectedRows > 0;
   }
+
+  /**
+   * List all staff members
+   */
+  static async findStaffMembers() {
+    const [rows] = await pool.execute(
+      "SELECT id, name, email, role, status, created_at, updated_at FROM users WHERE role = 'staff' ORDER BY id DESC"
+    );
+    return rows;
+  }
 }
 
 module.exports = User;

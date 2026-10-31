@@ -13,7 +13,8 @@ import {
   Shield,
   LifeBuoy,
   Bell,
-  Sparkles
+  Sparkles,
+  Package
 } from 'lucide-react';
 
 export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }) => {
@@ -32,6 +33,12 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       path: '/admin',
       icon: LayoutDashboard,
       exact: true,
+      roles: ['admin', 'staff', 'customer']
+    },
+    {
+      name: 'Subscriptions',
+      path: '/subscriptions',
+      icon: CreditCard,
       roles: ['admin', 'staff', 'customer']
     },
     {
@@ -57,12 +64,6 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       path: '/admin/staff',
       icon: Shield,
       roles: ['admin']
-    },
-    {
-      name: 'Subscriptions',
-      path: '/admin/subscriptions',
-      icon: CreditCard,
-      roles: ['admin', 'staff']
     },
     {
       name: 'Transactions & Billing',
