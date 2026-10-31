@@ -7,6 +7,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const { pool, testConnection } = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const productRoutes = require('./routes/productRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -66,6 +67,7 @@ app.get('/api/health/db', async (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/products', productRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {

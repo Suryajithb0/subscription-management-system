@@ -28,6 +28,7 @@ export const AdminDashboardPage = () => {
     totalRevenue: '$24,850',
     activeSubscriptions: 142,
     totalCustomers: 320,
+    totalProducts: 0,
     churnRate: '2.4%',
   });
 
@@ -40,9 +41,21 @@ export const AdminDashboardPage = () => {
     const fetchDashboardData = async () => {
       setLoading(true);
       try {
-        // Fetch subscriptions from backend if available
-        const subResponse = await api.get('/subscriptions').catch(() => null);
+        // Fetch subscriptions & products from backend
+        const [subResponse, prodResponse] = await Promise.all([
+          api.get('/subscriptions').catch(() => null),
+          api.get('/products?limit=100').catch(() => null),
+        ]);
+
         const fetchedSubs = subResponse?.data?.data || [];
+        const fetchedProds = prodResponse?.data?.data || [];
+
+        if (fetchedProds.length >= 0) {
+          setStats((prev) => ({
+            ...prev,
+            totalProducts: fetchedProds.length,
+          }));
+        }
 
         if (fetchedSubs.length > 0) {
           setRecentSubscriptions(fetchedSubs.slice(0, 5));

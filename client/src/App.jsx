@@ -12,6 +12,7 @@ import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { SubscriptionsPage } from './pages/admin/SubscriptionsPage';
 import { BillingPage } from './pages/admin/BillingPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
+import { ProductsPage } from './pages/admin/ProductsPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -68,6 +69,18 @@ export default function App() {
 
           {/* Dedicated Authenticated Admin Portal with Sidebar & Header Layout */}
           <Route
+            path="/"
+            element={
+              <ProtectedRoute allowedRoles={['admin', 'staff']}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* Products Route */}
+            <Route path="products" element={<ProductsPage />} />
+          </Route>
+
+          <Route
             path="/admin"
             element={
               <ProtectedRoute allowedRoles={['admin', 'staff']}>
@@ -77,6 +90,9 @@ export default function App() {
           >
             {/* Dashboard Overview */}
             <Route index element={<AdminDashboardPage />} />
+
+            {/* Product Management Alias */}
+            <Route path="products" element={<ProductsPage />} />
 
             {/* Subscriptions Module */}
             <Route path="subscriptions" element={<SubscriptionsPage />} />
