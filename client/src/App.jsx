@@ -2,6 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RootLayout } from './layouts/RootLayout';
 import { WelcomePage } from './pages/WelcomePage';
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
+import { StaffManagementPage } from './pages/admin/StaffManagementPage';
+import { UnauthorizedPage } from './pages/UnauthorizedPage';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import api from './services/api';
 
@@ -34,6 +41,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<RootLayout backendStatus={backendStatus} />}>
+            {/* Public Landing Page */}
             <Route
               path="/"
               element={
@@ -41,6 +49,24 @@ export default function App() {
                   backendHealth={backendHealth}
                   onRetryHealth={checkHealth}
                 />
+              }
+            />
+
+            {/* Authentication Flow Routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+
+            {/* Access Control & RBAC Protected Routes */}
+            <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            <Route
+              path="/admin/staff"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <StaffManagementPage />
+                </ProtectedRoute>
               }
             />
           </Route>

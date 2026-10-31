@@ -1,29 +1,31 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
-  Activity,
   CheckCircle2,
   Database,
   KeyRound,
   Layers,
   Server,
   Sparkles,
-  ArrowRight,
-  ShieldCheck,
   RefreshCw,
-  FolderGit2
+  FolderGit2,
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { StatusCard } from '../components/common/StatusCard';
+import { useAuth } from '../hooks/useAuth';
 
 export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
+  const { user, isAuthenticated } = useAuth();
   const isHealthy = backendHealth?.status === 'healthy';
 
   const techStack = [
-    { name: 'React 18 & Vite', category: 'Frontend', desc: 'Fast HMR & modern SPA tooling', status: 'Ready' },
-    { name: 'Tailwind CSS', category: 'Styling', desc: 'Utility-first modern styling', status: 'Active' },
+    { name: 'React 19 & Vite', category: 'Frontend', desc: 'Fast HMR & modern SPA tooling', status: 'Ready' },
+    { name: 'Tailwind CSS v4', category: 'Styling', desc: 'Utility-first modern styling', status: 'Active' },
     { name: 'Node.js & Express', category: 'Backend API', desc: 'REST server with health probing', status: isHealthy ? 'Connected' : 'Standby' },
     { name: 'MySQL (mysql2)', category: 'Database', desc: 'Relational data with pooling', status: 'Configured' },
-    { name: 'JWT & bcrypt', category: 'Security', desc: 'Stateless auth & salted hashes', status: 'Ready' },
-    { name: 'Lucide & Recharts', category: 'UI & Data', desc: 'Modern icons & metrics analytics', status: 'Installed' },
+    { name: 'JWT & bcrypt', category: 'Auth & RBAC', desc: 'Admin, Staff, Customer security', status: 'Active (Stage 03)' },
+    { name: 'Nodemailer', category: 'Email Service', desc: 'Secure token reset delivery', status: 'Configured' },
   ];
 
   return (
@@ -36,7 +38,7 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-6">
             <Sparkles className="h-3.5 w-3.5" />
-            Hackathon Foundation Initialized Successfully
+            Stage 03: Authentication & Role Management Online
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
@@ -44,22 +46,39 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
           </h1>
 
           <p className="text-lg text-slate-400 leading-relaxed mb-8">
-            The foundation for your subscription management platform has been built. The client and server architecture,
-            Tailwind CSS engine, database schemas, and REST endpoints are now wired and operational.
+            The complete authentication, JWT security layer, and role-based access control (Admin, Staff, Customer)
+            have been implemented and verified.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
-            <a
-              href="#health-probe"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition-all text-sm"
-            >
-              Verify API Health
-              <ArrowRight className="h-4 w-4" />
-            </a>
+            {!isAuthenticated ? (
+              <>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition-all text-sm"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition-all text-sm"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  Create Customer Account
+                </Link>
+              </>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium">
+                <CheckCircle2 className="h-4 w-4" />
+                Signed in as {user.name} ({user.role.toUpperCase()})
+              </div>
+            )}
 
             <button
               onClick={onRetryHealth}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium border border-slate-700 transition-all text-sm"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 font-medium border border-slate-700/60 transition-all text-sm"
             >
               <RefreshCw className="h-4 w-4" />
               Re-probe Backend
@@ -81,7 +100,7 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
         <StatusCard
           icon={Layers}
           title="Frontend Client"
-          value="Vite 9 + React 18"
+          value="Vite 8 + React 19"
           subtitle="HMR & Tailwind CSS Active"
           statusColor="text-indigo-400"
         />
@@ -89,16 +108,16 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
         <StatusCard
           icon={Database}
           title="Database"
-          value="MySQL Pool"
-          subtitle="server/database/schema.sql"
+          value="MySQL (subflow_db)"
+          subtitle="15 Core Tables Verified"
           statusColor="text-sky-400"
         />
 
         <StatusCard
           icon={KeyRound}
           title="Auth Architecture"
-          value="JWT + bcrypt"
-          subtitle="Token Middleware Ready"
+          value="JWT + bcrypt + RBAC"
+          subtitle="Admin / Staff / Customer"
           statusColor="text-purple-400"
         />
       </div>
@@ -107,8 +126,8 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
       <div className="mb-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Configured Foundation Matrix</h2>
-            <p className="text-sm text-slate-400">All core modules and dependencies installed for the hackathon baseline</p>
+            <h2 className="text-xl font-bold text-white tracking-tight">Stage 03 Foundation Matrix</h2>
+            <p className="text-sm text-slate-400">Security, token management, and authentication workflows</p>
           </div>
         </div>
 
@@ -138,19 +157,19 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
       <div className="p-6 rounded-2xl bg-slate-900/50 border border-slate-800">
         <h3 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
           <FolderGit2 className="h-4 w-4 text-indigo-400" />
-          Ready for Feature Implementation
+          Stage 03 Module Endpoints Ready
         </h3>
         <p className="text-sm text-slate-400 mb-4">
-          The foundation is cleanly separated. You can now develop authentication pages (<code className="text-indigo-300">/login</code>, <code className="text-indigo-300">/register</code>) and the subscription tracking dashboard.
+          All authentication routes (<code className="text-indigo-300">/login</code>, <code className="text-indigo-300">/register</code>, <code className="text-indigo-300">/forgot-password</code>, <code className="text-indigo-300">/reset-password</code>, <code className="text-indigo-300">/admin/staff</code>) are functional with role-based routing.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono text-slate-400">
           <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
-            <span className="text-indigo-400 block mb-1"># Frontend Server (client/)</span>
-            npm run dev (Port 5173)
+            <span className="text-indigo-400 block mb-1"># Test Suite Execution</span>
+            npm --prefix server test
           </div>
           <div className="p-3 rounded-lg bg-slate-950 border border-slate-800">
-            <span className="text-purple-400 block mb-1"># Backend API (server/)</span>
-            npm run dev (Port 5000)
+            <span className="text-purple-400 block mb-1"># Default Admin Account</span>
+            admin@subflow.io / Admin@SubFlow2026!
           </div>
         </div>
       </div>

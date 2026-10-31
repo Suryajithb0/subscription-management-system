@@ -11,12 +11,15 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  role ENUM('admin', 'manager', 'staff') NOT NULL DEFAULT 'staff',
+  role ENUM('admin', 'manager', 'staff', 'customer') NOT NULL DEFAULT 'customer',
   status ENUM('active', 'inactive', 'suspended') NOT NULL DEFAULT 'active',
+  reset_password_token VARCHAR(255) NULL,
+  reset_password_expires DATETIME NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NULL,
   INDEX idx_users_email (email),
-  INDEX idx_users_status (status)
+  INDEX idx_users_status (status),
+  INDEX idx_users_reset_token (reset_password_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- 2. CUSTOMERS
