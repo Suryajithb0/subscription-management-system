@@ -11,14 +11,17 @@ export const AdminLayout = () => {
   // Dynamic header title lookup based on path
   const getHeaderTitle = (pathname) => {
     if (pathname === '/admin' || pathname === '/admin/') return 'Dashboard Overview';
-    if (pathname.startsWith('/customers') || pathname.startsWith('/admin/customers')) return 'Customer Management';
-    if (pathname.startsWith('/products') || pathname.startsWith('/admin/products')) return 'Product & Variant Management';
-    if (pathname.startsWith('/plans') || pathname.startsWith('/admin/plans')) return 'Subscription Plan Management';
+    if (pathname.startsWith('/subscriptions') || pathname.startsWith('/admin/subscriptions')) return 'Subscription Management';
+    if (pathname.startsWith('/customers') || pathname.startsWith('/admin/customers')) return 'Customer Directory';
+    if (pathname.startsWith('/products') || pathname.startsWith('/admin/products')) return 'Product & Variant Catalog';
+    if (pathname.startsWith('/plans') || pathname.startsWith('/admin/plans')) return 'Subscription Plans & Pricing';
+    if (pathname.startsWith('/invoices') || pathname.startsWith('/admin/invoices')) return 'Invoices & Billing';
+    if (pathname.startsWith('/payments') || pathname.startsWith('/admin/payments')) return 'Payment Management';
+    if (pathname.startsWith('/discounts') || pathname.startsWith('/admin/discounts')) return 'Discounts & Promotions';
     if (pathname.startsWith('/admin/staff')) return 'Staff & Role Management';
-    if (pathname.startsWith('/admin/subscriptions')) return 'Subscription Management';
-    if (pathname.startsWith('/admin/billing')) return 'Billing & Transactions';
+    if (pathname.startsWith('/billing') || pathname.startsWith('/admin/billing')) return 'Billing & Transactions';
     if (pathname.startsWith('/admin/settings')) return 'System Settings';
-    return 'Admin Portal';
+    return 'SubSphere Platform';
   };
 
   return (

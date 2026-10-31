@@ -119,21 +119,23 @@ class Product {
   /**
    * Update existing product
    */
-  static async update(id, { name, description, product_type, sales_price, cost_price, notes, is_active }) {
+  static async update(id, updates = {}) {
+    const existing = await Product.findById(id);
+    if (!existing) return false;
+
+    const name = updates.name !== undefined ? updates.name.trim() : existing.name;
+    const description = updates.description !== undefined ? (updates.description ? updates.description.trim() : null) : existing.description;
+    const product_type = updates.product_type !== undefined ? updates.product_type.trim() : (existing.product_type || 'digital');
+    const sales_price = updates.sales_price !== undefined ? (parseFloat(updates.sales_price) || 0.00) : (parseFloat(existing.sales_price) || 0.00);
+    const cost_price = updates.cost_price !== undefined ? (parseFloat(updates.cost_price) || 0.00) : (parseFloat(existing.cost_price) || 0.00);
+    const notes = updates.notes !== undefined ? (updates.notes ? updates.notes.trim() : null) : existing.notes;
+    const is_active = updates.is_active !== undefined ? (updates.is_active ? 1 : 0) : (existing.is_active ? 1 : 0);
+
     const [result] = await pool.execute(
       `UPDATE products 
        SET name = ?, description = ?, product_type = ?, sales_price = ?, cost_price = ?, notes = ?, is_active = ?, updated_at = NOW() 
        WHERE id = ?`,
-      [
-        name.trim(),
-        description !== undefined ? (description ? description.trim() : null) : null,
-        product_type !== undefined ? product_type.trim() : 'digital',
-        parseFloat(sales_price) || 0.00,
-        parseFloat(cost_price) || 0.00,
-        notes !== undefined ? (notes ? notes.trim() : null) : null,
-        is_active !== undefined ? (is_active ? 1 : 0) : 1,
-        id
-      ]
+      [name, description, product_type, sales_price, cost_price, notes, is_active, id]
     );
     return result.affectedRows > 0;
   }

@@ -42,7 +42,7 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">SubFlow</span>
+            Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">SubSphere</span>
           </h1>
 
           <p className="text-lg text-slate-400 leading-relaxed mb-8">
@@ -70,9 +70,18 @@ export const WelcomePage = ({ backendHealth, onRetryHealth }) => {
                 </Link>
               </>
             ) : (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium">
-                <CheckCircle2 className="h-4 w-4" />
-                Signed in as {user.name} ({user.role.toUpperCase()})
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  to="/admin"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium shadow-lg shadow-indigo-600/30 transition-all text-sm"
+                >
+                  <Layers className="h-4 w-4" />
+                  <span>Open Platform Dashboard →</span>
+                </Link>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-sm font-medium">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Signed in as {user.name} ({user.role.toUpperCase()})
+                </div>
               </div>
             )}
 

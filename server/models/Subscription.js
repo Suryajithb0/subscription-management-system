@@ -189,6 +189,7 @@ class Subscription {
   static async create({
     customer_id,
     plan_id,
+    subscription_number,
     quantity = 1,
     start_date,
     end_date = null,
@@ -199,12 +200,43 @@ class Subscription {
     total_amount,
     billing_cycle,
     next_billing_date,
+    current_period_start,
+    current_period_end,
+    items,
   }) {
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
 
-      const subscriptionNumber = `SUB-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1000)}`;
+      let effectivePlanId = plan_id || (items && items[0] && items[0].plan_id);
+      let effectiveQuantity = quantity || (items && items[0] && items[0].quantity) || 1;
+      let effectiveUnitPrice = unit_price !== undefined ? unit_price : (items && items[0] && items[0].unit_price);
+      let effectiveBillingCycle = billing_cycle || 'monthly';
+
+      if (effectivePlanId && (effectiveUnitPrice === undefined || !billing_cycle)) {
+        const [planRows] = await connection.execute('SELECT price, billing_interval FROM plans WHERE id = ?', [effectivePlanId]);
+        if (planRows.length > 0) {
+          if (effectiveUnitPrice === undefined) effectiveUnitPrice = parseFloat(planRows[0].price) || 0;
+          if (!billing_cycle) effectiveBillingCycle = planRows[0].billing_interval || 'monthly';
+        }
+      }
+
+      effectiveUnitPrice = parseFloat(effectiveUnitPrice) || 0;
+      const effectiveTotalAmount = total_amount !== undefined ? parseFloat(total_amount) : (effectiveUnitPrice * effectiveQuantity);
+      const effectiveStartDate = start_date || current_period_start || new Date().toISOString().substring(0, 10);
+      const effectiveEndDate = end_date || current_period_end || null;
+
+      let effectiveNextBillingDate = next_billing_date;
+      if (!effectiveNextBillingDate) {
+        const dt = new Date(effectiveStartDate);
+        if (effectiveBillingCycle === 'daily') dt.setDate(dt.getDate() + 1);
+        else if (effectiveBillingCycle === 'weekly') dt.setDate(dt.getDate() + 7);
+        else if (effectiveBillingCycle === 'yearly') dt.setFullYear(dt.getFullYear() + 1);
+        else dt.setMonth(dt.getMonth() + 1);
+        effectiveNextBillingDate = dt.toISOString().substring(0, 10);
+      }
+
+      const subscriptionNumber = subscription_number || `SUB-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1000)}`;
 
       const [res] = await connection.execute(
         `INSERT INTO subscriptions (
@@ -212,20 +244,23 @@ class Subscription {
           start_date, end_date, next_billing_date,
           status, billing_cycle, quantity,
           unit_price, total_amount, currency,
+          current_period_start, current_period_end,
           auto_renew, notes, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'USD', ?, ?, NOW(), NOW())`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'USD', ?, ?, ?, ?, NOW(), NOW())`,
         [
           subscriptionNumber,
           parseInt(customer_id, 10),
-          parseInt(plan_id, 10),
-          start_date,
-          end_date || null,
-          next_billing_date,
+          parseInt(effectivePlanId, 10),
+          effectiveStartDate,
+          effectiveEndDate,
+          effectiveNextBillingDate,
           status,
-          billing_cycle,
-          quantity,
-          unit_price,
-          total_amount,
+          effectiveBillingCycle,
+          effectiveQuantity,
+          effectiveUnitPrice,
+          effectiveTotalAmount,
+          effectiveStartDate,
+          effectiveEndDate || effectiveNextBillingDate,
           auto_renew ? 1 : 0,
           notes || null,
         ]
@@ -238,7 +273,7 @@ class Subscription {
         `INSERT INTO subscription_items (
           subscription_id, plan_id, quantity, unit_price, created_at, updated_at
         ) VALUES (?, ?, ?, ?, NOW(), NOW())`,
-        [subscriptionId, plan_id, quantity, unit_price]
+        [subscriptionId, effectivePlanId, effectiveQuantity, effectiveUnitPrice]
       );
 
       await connection.commit();
@@ -322,6 +357,13 @@ class Subscription {
       params
     );
     return res.affectedRows > 0;
+  }
+
+  /**
+   * Alias for setStatus
+   */
+  static async updateStatus(id, newStatus, cancelReason = null) {
+    return this.setStatus(id, newStatus, cancelReason);
   }
 
   /**

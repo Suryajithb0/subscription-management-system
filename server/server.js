@@ -11,6 +11,9 @@ const productRoutes = require('./routes/productRoutes');
 const planRoutes = require('./routes/planRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const discountRoutes = require('./routes/discountRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 const billingScheduler = require('./services/billingScheduler');
 const { errorHandler } = require('./middleware/errorHandler');
 
@@ -31,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
-    service: 'SubFlow API Server',
+    service: 'SubSphere API Server',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
@@ -75,6 +78,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/invoices', invoiceRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/discounts', discountRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
@@ -103,7 +109,7 @@ const startServer = async () => {
 
   app.listen(PORT, () => {
     console.log(`===============================================`);
-    console.log(`🚀 SubFlow Backend running on port ${PORT}`);
+    console.log(`🚀 SubSphere Backend running on port ${PORT}`);
     console.log(`🩺 Health Check:    http://localhost:${PORT}/api/health`);
     console.log(`🗄️ DB Health Check: http://localhost:${PORT}/api/health/db`);
     console.log(`===============================================`);

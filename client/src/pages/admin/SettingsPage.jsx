@@ -17,7 +17,7 @@ export const SettingsPage = () => {
   const { user } = useAuth();
   const [saved, setSaved] = useState(false);
   const [formData, setFormData] = useState({
-    systemName: 'SubFlow Subscription Core',
+    systemName: 'SubSphere Subscription Core',
     adminEmail: user?.email || 'admin@subflow.io',
     currency: 'USD ($)',
     reminderDays: '7',

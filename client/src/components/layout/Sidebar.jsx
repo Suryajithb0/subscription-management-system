@@ -15,7 +15,9 @@ import {
   Bell,
   Sparkles,
   Package,
-  Receipt
+  Receipt,
+  Wallet,
+  Tag
 } from 'lucide-react';
 
 export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }) => {
@@ -61,16 +63,28 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
       roles: ['admin', 'staff']
     },
     {
-      name: 'Staff Management',
-      path: '/admin/staff',
-      icon: Shield,
-      roles: ['admin']
-    },
-    {
       name: 'Invoices & Billing',
       path: '/invoices',
       icon: Receipt,
       roles: ['admin', 'staff', 'customer']
+    },
+    {
+      name: 'Payments',
+      path: '/payments',
+      icon: Wallet,
+      roles: ['admin', 'staff', 'customer']
+    },
+    {
+      name: 'Discounts & Coupons',
+      path: '/discounts',
+      icon: Tag,
+      roles: ['admin', 'staff']
+    },
+    {
+      name: 'Staff Management',
+      path: '/admin/staff',
+      icon: Shield,
+      roles: ['admin']
     },
     {
       name: 'System Settings',
@@ -116,10 +130,10 @@ export const Sidebar = ({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMo
             {!isCollapsed && (
               <div className="flex flex-col">
                 <span className="font-bold text-lg bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent tracking-tight">
-                  SubFlow
+                  SubSphere
                 </span>
                 <span className="text-[10px] font-medium uppercase tracking-wider text-indigo-400">
-                  Management
+                  Platform
                 </span>
               </div>
             )}

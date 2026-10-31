@@ -45,9 +45,9 @@ export const Navbar = ({ backendStatus }) => {
           </div>
           <div>
             <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
-              SubFlow
+              SubSphere
               <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                v1.0.0 MVP
+                v1.0.0
               </span>
             </span>
           </div>
@@ -74,6 +74,14 @@ export const Navbar = ({ backendStatus }) => {
           {/* If Logged In */}
           {isAuthenticated && user ? (
             <div className="flex items-center space-x-3">
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 transition font-medium"
+              >
+                <Layers className="h-3.5 w-3.5" />
+                <span>Dashboard</span>
+              </Link>
+
               {isAdmin && (
                 <Link
                   to="/admin/staff"

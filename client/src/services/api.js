@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// Base Axios instance for SubFlow API
+// Base Axios instance for SubSphere API
 // withCredentials: true ensures HTTP-only cookies are automatically passed with every request
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',

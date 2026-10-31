@@ -10,7 +10,7 @@ export const RootLayout = ({ backendStatus }) => {
         <Outlet />
       </main>
       <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-600">
-        SubFlow • Subscription Management Platform • Built with React, Vite, Tailwind CSS, Express & MySQL
+        SubSphere • Subscription Management Platform • Built with React, Vite, Tailwind CSS, Express & MySQL
       </footer>
     </div>
   );

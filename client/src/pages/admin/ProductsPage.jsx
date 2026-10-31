@@ -18,10 +18,7 @@ import {
   Save,
   AlertCircle,
   CheckCircle2,
-  DollarSign,
-  Tag,
-  Percent,
-  Info
+  Tag
 } from 'lucide-react';
 import api from '../../services/api';
 

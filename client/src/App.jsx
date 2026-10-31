@@ -19,6 +19,8 @@ import { PlansPage } from './pages/admin/PlansPage';
 import { CustomersPage } from './pages/admin/CustomersPage';
 import { CustomerProfilePage } from './pages/admin/CustomerProfilePage';
 import { SubscriptionDetailsPage } from './pages/admin/SubscriptionDetailsPage';
+import { PaymentsPage } from './pages/admin/PaymentsPage';
+import { DiscountsPage } from './pages/admin/DiscountsPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -93,6 +95,9 @@ export default function App() {
             <Route path="invoices/:id" element={<InvoiceDetailsPage />} />
             <Route path="billing" element={<InvoicesPage />} />
             <Route path="billing/:id" element={<InvoiceDetailsPage />} />
+            <Route path="payments" element={<PaymentsPage />} />
+            <Route path="payments/:id" element={<PaymentsPage />} />
+            <Route path="discounts" element={<DiscountsPage />} />
             <Route
               path="staff"
               element={
@@ -127,6 +132,9 @@ export default function App() {
             <Route path="invoices/:id" element={<InvoiceDetailsPage />} />
             <Route path="billing" element={<InvoicesPage />} />
             <Route path="billing/:id" element={<InvoiceDetailsPage />} />
+            <Route path="payments" element={<PaymentsPage />} />
+            <Route path="payments/:id" element={<PaymentsPage />} />
+            <Route path="discounts" element={<DiscountsPage />} />
 
             {/* Staff Management (Admin only) */}
             <Route

@@ -69,7 +69,7 @@ export const LoginPage = () => {
             <Layers className="h-6 w-6 text-white" />
           </div>
           <h2 className="text-3xl font-extrabold text-white tracking-tight">
-            Sign in to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">SubFlow</span>
+            Sign in to <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">SubSphere</span>
           </h2>
           <p className="mt-2 text-sm text-slate-400">
             Enter your credentials to access your subscription control center
@@ -188,7 +188,7 @@ export const LoginPage = () => {
 
         {/* Footer Link */}
         <p className="text-center text-sm text-slate-400">
-          New to SubFlow?{' '}
+          New to SubSphere?{' '}
           <Link to="/register" className="font-medium text-indigo-400 hover:text-indigo-300 transition">
             Create a customer account
           </Link>

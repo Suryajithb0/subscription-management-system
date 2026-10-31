@@ -98,7 +98,7 @@ export const ResetPasswordPage = () => {
             Reset Account Password
           </h2>
           <p className="mt-2 text-sm text-slate-400">
-            Choose a new strong password for your SubFlow account
+            Choose a new strong password for your SubSphere account
           </p>
         </div>
 

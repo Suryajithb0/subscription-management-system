@@ -149,14 +149,19 @@ class Customer {
     return result.insertId;
   }
 
-  /**
-   * Update customer
-   */
-  static async update(id, { name, email, phone, company_name, address, status }) {
-    const cleanName = name ? name.trim() : '';
+  static async update(id, updates = {}) {
+    const existing = await Customer.findById(id);
+    if (!existing) return false;
+
+    const cleanName = updates.name !== undefined ? updates.name.trim() : (existing.name || '');
     const nameParts = cleanName.split(/\s+/);
     const firstName = nameParts[0] || cleanName;
     const lastName = nameParts.slice(1).join(' ') || '';
+    const cleanEmail = updates.email !== undefined ? updates.email.toLowerCase().trim() : (existing.email || '').toLowerCase().trim();
+    const phone = updates.phone !== undefined ? (updates.phone ? updates.phone.trim() : null) : existing.phone;
+    const company_name = updates.company_name !== undefined ? (updates.company_name ? updates.company_name.trim() : null) : existing.company_name;
+    const address = updates.address !== undefined ? (updates.address ? updates.address.trim() : null) : existing.address;
+    const status = updates.status !== undefined ? updates.status : existing.status;
 
     const [result] = await pool.execute(
       `UPDATE customers 
@@ -168,12 +173,12 @@ class Customer {
         cleanName,
         firstName,
         lastName,
-        email.toLowerCase().trim(),
-        phone !== undefined ? (phone ? phone.trim() : null) : null,
-        company_name !== undefined ? (company_name ? company_name.trim() : null) : null,
-        address !== undefined ? (address ? address.trim() : null) : null,
-        address !== undefined ? (address ? address.trim() : null) : null,
-        status || null,
+        cleanEmail,
+        phone,
+        company_name,
+        address,
+        address,
+        status,
         id,
       ]
     );

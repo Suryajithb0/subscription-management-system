@@ -261,7 +261,7 @@ const getInvoicePrintData = async (req, res, next) => {
     }
 
     const companyInfo = {
-      name: 'SubFlow Subscription Management Inc.',
+      name: 'SubSphere Subscription Management Inc.',
       tagline: 'Modern Subscription & Recurring Billing Infrastructure',
       address: '100 Innovation Way, Suite 400',
       city: 'San Francisco, CA 94105',

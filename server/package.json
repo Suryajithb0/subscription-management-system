@@ -1,7 +1,7 @@
 {
   "name": "subflow-server",
   "version": "1.0.0",
-  "description": "Backend API server for SubFlow Subscription Management System",
+  "description": "Backend API server for SubSphere Subscription Management System",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "db:init": "node database/init.js",
     "seed:admin": "node database/seedAdmin.js",
-    "test": "node test/auth.test.js"
+    "test": "node test/auth.test.js",
+    "test:all": "node test/stage11_comprehensive.test.js"
   },
   "keywords": [
     "subflow",

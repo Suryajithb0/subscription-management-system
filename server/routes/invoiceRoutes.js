@@ -11,6 +11,7 @@ const {
   triggerBilling,
   getTaxes
 } = require('../controllers/invoiceController');
+const { getInvoicePayments } = require('../controllers/paymentController');
 
 const { authenticateToken } = require('../middleware/auth.middleware');
 const { authorizeRoles } = require('../middleware/role.middleware');
@@ -38,6 +39,9 @@ router.get('/:id/print', getInvoicePrintData);
 
 // Single invoice details (Admin, Staff, Customer with ownership check)
 router.get('/:id', getInvoiceById);
+
+// Payments recorded for an invoice (Admin, Staff, Customer with ownership check)
+router.get('/:id/payments', getInvoicePayments);
 
 // Update eligible draft/pending invoice (Admin & Staff)
 router.put('/:id', authorizeRoles('admin', 'staff'), updateInvoice);
