@@ -1,7 +1,8 @@
 const mysql = require('mysql2/promise');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-// Create connection pool
+// Reusable MySQL Connection Pool using mysql2/promise
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
@@ -10,20 +11,29 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'subflow_db',
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0
 });
 
 // Helper function to test database connectivity
 const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
-    console.log(`[Database] Successfully connected to MySQL database: ${process.env.DB_NAME || 'subflow_db'}`);
+    await connection.query('SELECT 1 AS status');
     connection.release();
-    return true;
+    return {
+      connected: true,
+      database: process.env.DB_NAME || 'subflow_db',
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 3306
+    };
   } catch (error) {
-    console.warn(`[Database Warning] MySQL connection failed: ${error.message}`);
-    console.warn('[Database Notice] Backend server will continue running in standalone mode.');
-    return false;
+    console.error(`[Database Error] Connection failed: ${error.message}`);
+    return {
+      connected: false,
+      error: error.message
+    };
   }
 };
 
