@@ -13,6 +13,7 @@ import { SubscriptionsPage } from './pages/admin/SubscriptionsPage';
 import { BillingPage } from './pages/admin/BillingPage';
 import { SettingsPage } from './pages/admin/SettingsPage';
 import { ProductsPage } from './pages/admin/ProductsPage';
+import { PlansPage } from './pages/admin/PlansPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
@@ -76,8 +77,9 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            {/* Products Route */}
+            {/* Direct Core Module Routes */}
             <Route path="products" element={<ProductsPage />} />
+            <Route path="plans" element={<PlansPage />} />
           </Route>
 
           <Route
@@ -91,8 +93,9 @@ export default function App() {
             {/* Dashboard Overview */}
             <Route index element={<AdminDashboardPage />} />
 
-            {/* Product Management Alias */}
+            {/* Core Management Aliases */}
             <Route path="products" element={<ProductsPage />} />
+            <Route path="plans" element={<PlansPage />} />
 
             {/* Subscriptions Module */}
             <Route path="subscriptions" element={<SubscriptionsPage />} />

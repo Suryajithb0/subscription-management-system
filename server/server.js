@@ -8,6 +8,7 @@ const { pool, testConnection } = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const productRoutes = require('./routes/productRoutes');
+const planRoutes = require('./routes/planRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -68,6 +69,7 @@ app.get('/api/health/db', async (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/plans', planRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
